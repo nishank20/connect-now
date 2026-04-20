@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -13,8 +15,10 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import logo from "@/assets/logo-dental.png";
-import { AlertCircle, Phone, Video, Plus } from "lucide-react";
+import { AlertCircle, Phone, Video, Plus, RotateCcw } from "lucide-react";
 import AppointmentStepper from "@/components/AppointmentStepper";
+
+const SYMPTOMS = ["Fever", "Swelling", "Sores/Lesions", "Dry Mouth", "Sore Throat", "Sensitivity", "None of the above", "Other"];
 
 const US_STATES = [
   "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut",
