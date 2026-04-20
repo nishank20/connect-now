@@ -68,7 +68,7 @@ const Appointment = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <button
                     type="button"
-                    onClick={() => setCallType("video")}
+                    onClick={() => { setCallType("video"); next(); }}
                     className={`flex flex-col items-center gap-3 rounded-xl border-2 p-6 transition-all ${
                       callType === "video" ? "border-secondary bg-secondary/5" : "border-border hover:border-secondary/50"
                     }`}
@@ -78,7 +78,7 @@ const Appointment = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setCallType("phone")}
+                    onClick={() => { setCallType("phone"); next(); }}
                     className={`flex flex-col items-center gap-3 rounded-xl border-2 p-6 transition-all ${
                       callType === "phone" ? "border-secondary bg-secondary/5" : "border-border hover:border-secondary/50"
                     }`}
