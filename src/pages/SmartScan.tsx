@@ -3,19 +3,70 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, ScanFace, ChevronRight } from "lucide-react";
+import { Lock, ScanFace, ChevronRight, Maximize2 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import logo from "@/assets/logo-dental.png";
 import selfieImg from "@/assets/smartscan-selfie.jpg";
+import scanRightSide from "@/assets/scan-right-side.jpg";
+import scanLeftSide from "@/assets/scan-left-side.jpg";
+import scanFront from "@/assets/scan-front.jpg";
 
-type Step = "account" | "intro" | "disclaimer" | "method" | "instructions" | "complete";
+type Step =
+  | "account"
+  | "intro"
+  | "disclaimer"
+  | "method"
+  | "instructions"
+  | "capture"
+  | "review"
+  | "complete";
+
+const PHOTO_PROMPTS = [
+  {
+    title: "Right Side",
+    description:
+      "Turn your head slightly to the left. Use your right-hand index and middle fingers to retract your right cheek.",
+    image: scanRightSide,
+    bg: "bg-[hsl(0_70%_50%)]",
+  },
+  {
+    title: "Left Side",
+    description:
+      "Turn your head slightly to the right. Use your left-hand index and middle fingers to retract your left cheek.",
+    image: scanLeftSide,
+    bg: "bg-[hsl(0_70%_50%)]",
+  },
+  {
+    title: "Front",
+    description:
+      "A big smile with your teeth slightly open to show your front teeth and some of your gums. You may need to use your thumb and your forefinger to open your lips a bit more.",
+    image: scanFront,
+    bg: "bg-[hsl(15_85%_55%)]",
+  },
+  {
+    title: "Upper",
+    description:
+      "Tilt your head back slightly and open wide. Use your fingers to lift your upper lip so we can see all of your top teeth and gums.",
+    image: scanFront,
+    bg: "bg-[hsl(15_85%_55%)]",
+  },
+  {
+    title: "Lower",
+    description:
+      "Open your mouth wide and pull your lower lip down with your fingers to show all of your bottom teeth and gums.",
+    image: scanFront,
+    bg: "bg-[hsl(15_85%_55%)]",
+  },
+];
 
 const STEP_PROGRESS: Record<Step, number> = {
-  account: 20,
-  intro: 35,
-  disclaimer: 55,
-  method: 75,
-  instructions: 90,
+  account: 8,
+  intro: 16,
+  disclaimer: 24,
+  method: 32,
+  instructions: 40,
+  capture: 50,
+  review: 50,
   complete: 100,
 };
 
@@ -24,9 +75,25 @@ const SmartScan = () => {
   const [step, setStep] = useState<Step>("account");
   const [method, setMethod] = useState<"myself" | "assisted">("myself");
   const [account, setAccount] = useState({ firstName: "", lastName: "", dob: "" });
+  const [photoIndex, setPhotoIndex] = useState(0);
 
   const accountValid =
     account.firstName.trim() && account.lastName.trim() && account.dob.trim();
+
+  const currentPhoto = PHOTO_PROMPTS[photoIndex];
+  const progressValue =
+    step === "capture" || step === "review"
+      ? 40 + ((photoIndex + (step === "review" ? 1 : 0)) / PHOTO_PROMPTS.length) * 60
+      : STEP_PROGRESS[step];
+
+  const handleConfirmPhoto = () => {
+    if (photoIndex < PHOTO_PROMPTS.length - 1) {
+      setPhotoIndex(photoIndex + 1);
+      setStep("capture");
+    } else {
+      setStep("complete");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -36,11 +103,17 @@ const SmartScan = () => {
         </button>
       </header>
       <main className="container max-w-xl pb-16">
-        <div className="h-1 w-full bg-muted rounded-full mb-8 overflow-hidden">
+        <div className="relative h-6 w-full bg-card rounded-full mb-8 overflow-hidden shadow-sm">
           <div
-            className="h-full bg-[image:var(--gradient-brand)] transition-all"
-            style={{ width: `${STEP_PROGRESS[step]}%` }}
-          />
+            className="absolute inset-y-0 left-0 bg-[image:var(--gradient-brand)] transition-all flex items-center justify-end pr-3"
+            style={{ width: `${progressValue}%` }}
+          >
+            {(step === "capture" || step === "review") && (
+              <span className="text-xs font-semibold text-primary-foreground whitespace-nowrap">
+                {photoIndex + 1} out of {PHOTO_PROMPTS.length}
+              </span>
+            )}
+          </div>
         </div>
 
         {step === "account" && (
@@ -269,10 +342,78 @@ const SmartScan = () => {
               </p>
               <div className="flex justify-center">
                 <Button
-                  onClick={() => setStep("complete")}
+                  onClick={() => {
+                    setPhotoIndex(0);
+                    setStep("capture");
+                  }}
                   className="rounded-full px-12 h-12 bg-primary hover:bg-primary/90 w-full max-w-sm"
                 >
                   Next
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {step === "capture" && (
+          <div className="bg-card rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-muted">
+              <img
+                src={currentPhoto.image}
+                alt={currentPhoto.title}
+                loading="lazy"
+                className="w-full h-auto object-cover max-h-[60vh]"
+              />
+            </div>
+            <div className="bg-secondary text-secondary-foreground p-6 space-y-4">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="text-2xl font-bold">{currentPhoto.title}</h2>
+                <button
+                  onClick={() => setStep("review")}
+                  className="shrink-0 w-12 h-12 rounded-full bg-accent-foreground/80 hover:bg-accent-foreground text-secondary-foreground flex items-center justify-center transition-colors"
+                  aria-label="Take photo"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </div>
+              <p className="text-base leading-relaxed">
+                {currentPhoto.description}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {step === "review" && (
+          <div
+            className={`${currentPhoto.bg} rounded-2xl shadow-sm overflow-hidden min-h-[70vh] flex flex-col p-6 relative`}
+          >
+            <div className="absolute top-4 right-4 w-28 h-28 rounded-lg overflow-hidden border-2 border-white/40 shadow-lg">
+              <img
+                src={currentPhoto.image}
+                alt="Reference"
+                className="w-full h-full object-cover"
+              />
+              <Maximize2 className="absolute bottom-1 right-1 h-4 w-4 text-white drop-shadow" />
+            </div>
+
+            <div className="flex-1" />
+
+            <div className="space-y-6 text-center">
+              <h2 className="text-2xl font-semibold text-white">
+                Does your photo match the example?
+              </h2>
+              <div className="flex justify-center gap-3">
+                <Button
+                  onClick={() => setStep("capture")}
+                  className="rounded-full px-10 h-12 bg-card text-foreground hover:bg-card/90"
+                >
+                  Retake
+                </Button>
+                <Button
+                  onClick={handleConfirmPhoto}
+                  className="rounded-full px-10 h-12 bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                >
+                  Confirm
                 </Button>
               </div>
             </div>
