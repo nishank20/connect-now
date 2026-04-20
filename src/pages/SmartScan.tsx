@@ -175,8 +175,13 @@ const SmartScan = () => {
       setPhotoIndex(photoIndex + 1);
       setStep("capture");
     } else {
-      setStep("complete");
+      setStep("summary");
     }
+  };
+
+  const handleRetakeFromSummary = (index: number) => {
+    setPhotoIndex(index);
+    setStep("camera");
   };
 
   return (
