@@ -77,6 +77,12 @@ const SmartScan = () => {
   const [method, setMethod] = useState<"myself" | "assisted">("myself");
   const [account, setAccount] = useState({ firstName: "", lastName: "", dob: "" });
   const [photoIndex, setPhotoIndex] = useState(0);
+  const [capturedPhotos, setCapturedPhotos] = useState<(string | null)[]>(
+    Array(PHOTO_PROMPTS.length).fill(null)
+  );
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const accountValid =
     account.firstName.trim() && account.lastName.trim() && account.dob.trim();
@@ -86,6 +92,77 @@ const SmartScan = () => {
     step === "capture" || step === "review"
       ? 40 + ((photoIndex + (step === "review" ? 1 : 0)) / PHOTO_PROMPTS.length) * 60
       : STEP_PROGRESS[step];
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const startCamera = async () => {
+    setCameraError(null);
+    stopCamera();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false,
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play().catch(() => {});
+      }
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.name === "NotAllowedError"
+            ? "Camera access was denied. Please allow camera permission in your browser settings."
+            : err.name === "NotFoundError"
+            ? "No camera was found on this device."
+            : err.message
+          : "Unable to access camera.";
+      setCameraError(message);
+    }
+  };
+
+  useEffect(() => {
+    if (step === "capture") {
+      startCamera();
+    } else {
+      stopCamera();
+    }
+    return () => stopCamera();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, photoIndex]);
+
+  const handleCapturePhoto = () => {
+    const video = videoRef.current;
+    if (!video || !streamRef.current) {
+      toast({
+        title: "Camera not ready",
+        description: cameraError ?? "Please allow camera access to take a photo.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth || 1280;
+    canvas.height = video.videoHeight || 720;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+    setCapturedPhotos((prev) => {
+      const next = [...prev];
+      next[photoIndex] = dataUrl;
+      return next;
+    });
+    setStep("review");
+  };
 
   const handleConfirmPhoto = () => {
     if (photoIndex < PHOTO_PROMPTS.length - 1) {
