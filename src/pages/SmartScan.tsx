@@ -87,6 +87,7 @@ const SmartScan = () => {
     Array(PHOTO_PROMPTS.length).fill(null)
   );
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [retakingFromSummary, setRetakingFromSummary] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
