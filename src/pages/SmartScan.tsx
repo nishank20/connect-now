@@ -103,11 +103,17 @@ const SmartScan = () => {
         </button>
       </header>
       <main className="container max-w-xl pb-16">
-        <div className="h-1 w-full bg-muted rounded-full mb-8 overflow-hidden">
+        <div className="relative h-6 w-full bg-card rounded-full mb-8 overflow-hidden shadow-sm">
           <div
-            className="h-full bg-[image:var(--gradient-brand)] transition-all"
-            style={{ width: `${STEP_PROGRESS[step]}%` }}
-          />
+            className="absolute inset-y-0 left-0 bg-[image:var(--gradient-brand)] transition-all flex items-center justify-end pr-3"
+            style={{ width: `${progressValue}%` }}
+          >
+            {(step === "capture" || step === "review") && (
+              <span className="text-xs font-semibold text-primary-foreground whitespace-nowrap">
+                {photoIndex + 1} out of {PHOTO_PROMPTS.length}
+              </span>
+            )}
+          </div>
         </div>
 
         {step === "account" && (
