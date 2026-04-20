@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { VirtualConsultationDialog } from "@/components/VirtualConsultationDialog";
 import logo from "@/assets/logo-dental.png";
 import { Video, ShieldCheck, Clock } from "lucide-react";
 
 const Index = () => {
-  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/40">
@@ -34,7 +33,7 @@ const Index = () => {
 
           <Button
             size="lg"
-            onClick={() => setOpen(true)}
+            onClick={() => navigate("/consultation")}
             className="rounded-full px-10 h-14 text-base bg-[image:var(--gradient-brand)] hover:opacity-90 shadow-[var(--shadow-brand)] transition-opacity"
           >
             <Video className="mr-2 h-5 w-5" />
@@ -69,8 +68,6 @@ const Index = () => {
           </div>
         </div>
       </main>
-
-      <VirtualConsultationDialog open={open} onOpenChange={setOpen} />
     </div>
   );
 };
