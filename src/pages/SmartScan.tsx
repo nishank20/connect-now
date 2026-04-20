@@ -3,19 +3,70 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, ScanFace, ChevronRight } from "lucide-react";
+import { Lock, ScanFace, ChevronRight, Maximize2 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import logo from "@/assets/logo-dental.png";
 import selfieImg from "@/assets/smartscan-selfie.jpg";
+import scanRightSide from "@/assets/scan-right-side.jpg";
+import scanLeftSide from "@/assets/scan-left-side.jpg";
+import scanFront from "@/assets/scan-front.jpg";
 
-type Step = "account" | "intro" | "disclaimer" | "method" | "instructions" | "complete";
+type Step =
+  | "account"
+  | "intro"
+  | "disclaimer"
+  | "method"
+  | "instructions"
+  | "capture"
+  | "review"
+  | "complete";
+
+const PHOTO_PROMPTS = [
+  {
+    title: "Right Side",
+    description:
+      "Turn your head slightly to the left. Use your right-hand index and middle fingers to retract your right cheek.",
+    image: scanRightSide,
+    bg: "bg-[hsl(0_70%_50%)]",
+  },
+  {
+    title: "Left Side",
+    description:
+      "Turn your head slightly to the right. Use your left-hand index and middle fingers to retract your left cheek.",
+    image: scanLeftSide,
+    bg: "bg-[hsl(0_70%_50%)]",
+  },
+  {
+    title: "Front",
+    description:
+      "A big smile with your teeth slightly open to show your front teeth and some of your gums. You may need to use your thumb and your forefinger to open your lips a bit more.",
+    image: scanFront,
+    bg: "bg-[hsl(15_85%_55%)]",
+  },
+  {
+    title: "Upper",
+    description:
+      "Tilt your head back slightly and open wide. Use your fingers to lift your upper lip so we can see all of your top teeth and gums.",
+    image: scanFront,
+    bg: "bg-[hsl(15_85%_55%)]",
+  },
+  {
+    title: "Lower",
+    description:
+      "Open your mouth wide and pull your lower lip down with your fingers to show all of your bottom teeth and gums.",
+    image: scanFront,
+    bg: "bg-[hsl(15_85%_55%)]",
+  },
+];
 
 const STEP_PROGRESS: Record<Step, number> = {
-  account: 20,
-  intro: 35,
-  disclaimer: 55,
-  method: 75,
-  instructions: 90,
+  account: 8,
+  intro: 16,
+  disclaimer: 24,
+  method: 32,
+  instructions: 40,
+  capture: 50,
+  review: 50,
   complete: 100,
 };
 
@@ -24,9 +75,25 @@ const SmartScan = () => {
   const [step, setStep] = useState<Step>("account");
   const [method, setMethod] = useState<"myself" | "assisted">("myself");
   const [account, setAccount] = useState({ firstName: "", lastName: "", dob: "" });
+  const [photoIndex, setPhotoIndex] = useState(0);
 
   const accountValid =
     account.firstName.trim() && account.lastName.trim() && account.dob.trim();
+
+  const currentPhoto = PHOTO_PROMPTS[photoIndex];
+  const progressValue =
+    step === "capture" || step === "review"
+      ? 40 + ((photoIndex + (step === "review" ? 1 : 0)) / PHOTO_PROMPTS.length) * 60
+      : STEP_PROGRESS[step];
+
+  const handleConfirmPhoto = () => {
+    if (photoIndex < PHOTO_PROMPTS.length - 1) {
+      setPhotoIndex(photoIndex + 1);
+      setStep("capture");
+    } else {
+      setStep("complete");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-muted/30">
