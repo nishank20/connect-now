@@ -41,11 +41,11 @@ const SmartScan = () => {
                 <h2 className="text-center text-xl">How It Works</h2>
                 <ul className="space-y-3 max-w-sm mx-auto">
                   <li className="flex items-start gap-3">
-                    <ChevronRight className="h-5 w-5 mt-0.5 text-yellow-700 bg-yellow-700/20 rounded-full p-0.5 shrink-0" />
+                    <ChevronRight className="h-5 w-5 mt-0.5 text-accent-foreground bg-accent rounded-full p-0.5 shrink-0" />
                     <span>Capture images with our guided prompts</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <ChevronRight className="h-5 w-5 mt-0.5 text-yellow-700 bg-yellow-700/20 rounded-full p-0.5 shrink-0" />
+                    <ChevronRight className="h-5 w-5 mt-0.5 text-accent-foreground bg-accent rounded-full p-0.5 shrink-0" />
                     <span>Receive a report with the Smart Scan's findings*</span>
                   </li>
                 </ul>
