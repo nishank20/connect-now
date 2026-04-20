@@ -172,6 +172,11 @@ const SmartScan = () => {
   };
 
   const handleConfirmPhoto = () => {
+    if (retakingFromSummary) {
+      setRetakingFromSummary(false);
+      setStep("summary");
+      return;
+    }
     if (photoIndex < PHOTO_PROMPTS.length - 1) {
       setPhotoIndex(photoIndex + 1);
       setStep("capture");
@@ -182,6 +187,7 @@ const SmartScan = () => {
 
   const handleRetakeFromSummary = (index: number) => {
     setPhotoIndex(index);
+    setRetakingFromSummary(true);
     setStep("camera");
   };
 
