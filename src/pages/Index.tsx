@@ -33,7 +33,7 @@ const Index = () => {
 
           <Button
             size="lg"
-            onClick={() => navigate("/consultation")}
+            onClick={() => navigate("/intake")}
             className="rounded-full px-10 h-14 text-base bg-[image:var(--gradient-brand)] hover:opacity-90 shadow-[var(--shadow-brand)] transition-opacity"
           >
             <Video className="mr-2 h-5 w-5" />
