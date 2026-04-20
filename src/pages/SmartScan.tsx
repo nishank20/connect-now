@@ -78,6 +78,10 @@ const STEP_PROGRESS: Record<Step, number> = {
   camera: 50,
   review: 50,
   summary: 100,
+  phone: 100,
+  verify: 100,
+  finish: 100,
+  submitted: 100,
   complete: 100,
 };
 
