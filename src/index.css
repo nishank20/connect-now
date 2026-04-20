@@ -17,11 +17,16 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 270 50% 45%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 195 85% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    --brand-cyan: 195 85% 55%;
+    --brand-purple: 270 55% 50%;
+    --gradient-brand: linear-gradient(90deg, hsl(195 85% 55%), hsl(270 55% 50%));
+    --shadow-brand: 0 20px 50px -20px hsl(270 55% 50% / 0.35);
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
