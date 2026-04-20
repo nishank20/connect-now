@@ -11,6 +11,8 @@ import selfieImg from "@/assets/smartscan-selfie.jpg";
 import scanRightSide from "@/assets/scan-right-side.jpg";
 import scanLeftSide from "@/assets/scan-left-side.jpg";
 import scanFront from "@/assets/scan-front.jpg";
+import scanUpper from "@/assets/scan-upper.jpg";
+import scanLower from "@/assets/scan-lower.jpg";
 
 type Step =
   | "account"
