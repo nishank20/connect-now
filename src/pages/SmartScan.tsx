@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, ScanFace, ChevronRight } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import logo from "@/assets/logo-dental.png";
 
 type Step = "account" | "intro" | "disclaimer" | "method" | "instructions" | "complete";
@@ -138,6 +139,20 @@ const SmartScan = () => {
                 *For informational purposes only. Findings are not reviewed by a
                 licensed dentist and do not constitute a dental diagnosis.
               </p>
+
+              <div className="border-t pt-6 space-y-4">
+                <h3 className="text-center text-primary text-xl font-medium">
+                  You will need a phone to continue
+                </h3>
+                <p className="text-center text-sm text-primary/80 max-w-sm mx-auto">
+                  Scan this QR code to open your dental.com account on your phone to continue with Smart Scan.
+                </p>
+                <div className="flex justify-center pt-2">
+                  <div className="bg-white p-4 rounded-lg border">
+                    <QRCodeSVG value={window.location.href} size={180} />
+                  </div>
+                </div>
+              </div>
 
               <div className="flex justify-center pt-2">
                 <Button
