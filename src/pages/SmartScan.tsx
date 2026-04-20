@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Lock, ScanFace, ChevronRight } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import logo from "@/assets/logo-dental.png";
+import selfieImg from "@/assets/smartscan-selfie.jpg";
 
 type Step = "account" | "intro" | "disclaimer" | "method" | "instructions" | "complete";
 
@@ -250,11 +251,14 @@ const SmartScan = () => {
 
         {step === "instructions" && (
           <div className="bg-card rounded-2xl shadow-sm overflow-hidden">
-            <div className="aspect-[3/4] bg-muted flex items-center justify-center">
+            <div className="bg-muted flex items-center justify-center">
               <img
-                src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop"
-                alt="Selfie demonstration"
-                className="w-full h-full object-cover"
+                src={selfieImg}
+                alt="Hold your phone in front of a mirror to take selfie photos"
+                width={768}
+                height={1024}
+                loading="lazy"
+                className="w-full h-auto object-cover"
               />
             </div>
             <div className="bg-secondary text-secondary-foreground p-6 space-y-6">
