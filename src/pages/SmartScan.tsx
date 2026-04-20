@@ -96,6 +96,10 @@ const SmartScan = () => {
   );
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [retakingFromSummary, setRetakingFromSummary] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const [code, setCode] = useState("");
+  const [finishForm, setFinishForm] = useState({ firstName: "", lastName: "", email: "" });
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
