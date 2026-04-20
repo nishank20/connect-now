@@ -506,7 +506,8 @@ const SmartScan = () => {
                 <img
                   src={currentPhoto.image}
                   alt="Reference"
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto object-cover object-top"
+                  style={{ height: "175%" }}
                 />
               </div>
               {cameraError && (
