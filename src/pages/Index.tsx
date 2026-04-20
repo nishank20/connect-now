@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo-dental.png";
-import { Video, ShieldCheck, Clock } from "lucide-react";
+import { Video, ShieldCheck, Clock, ScanLine } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -31,14 +31,25 @@ const Index = () => {
             no commute — just expert care when you need it.
           </p>
 
-          <Button
-            size="lg"
-            onClick={() => navigate("/intake")}
-            className="rounded-full px-10 h-14 text-base bg-[image:var(--gradient-brand)] hover:opacity-90 shadow-[var(--shadow-brand)] transition-opacity"
-          >
-            <Video className="mr-2 h-5 w-5" />
-            Start Virtual Consultation
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              size="lg"
+              onClick={() => navigate("/intake")}
+              className="rounded-full px-10 h-14 text-base bg-[image:var(--gradient-brand)] hover:opacity-90 shadow-[var(--shadow-brand)] transition-opacity"
+            >
+              <Video className="mr-2 h-5 w-5" />
+              Start Virtual Consultation
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => navigate("/smartscan")}
+              className="rounded-full px-10 h-14 text-base border-2 border-secondary text-secondary hover:bg-secondary/10"
+            >
+              <ScanLine className="mr-2 h-5 w-5" />
+              SmartScan
+            </Button>
+          </div>
 
           <div className="flex flex-wrap gap-6 pt-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-2">
