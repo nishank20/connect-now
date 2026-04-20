@@ -91,7 +91,7 @@ const SmartScan = () => {
 
   const currentPhoto = PHOTO_PROMPTS[photoIndex];
   const progressValue =
-    step === "capture" || step === "review"
+    step === "capture" || step === "camera" || step === "review"
       ? 40 + ((photoIndex + (step === "review" ? 1 : 0)) / PHOTO_PROMPTS.length) * 60
       : STEP_PROGRESS[step];
 
