@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, ScanFace, ChevronRight, Maximize2 } from "lucide-react";
+import { Lock, ScanFace, ChevronRight, Maximize2, Camera, AlertCircle } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import { QRCodeSVG } from "qrcode.react";
 import logo from "@/assets/logo-dental.png";
 import selfieImg from "@/assets/smartscan-selfie.jpg";
