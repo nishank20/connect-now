@@ -24,6 +24,10 @@ type Step =
   | "camera"
   | "review"
   | "summary"
+  | "phone"
+  | "verify"
+  | "finish"
+  | "submitted"
   | "complete";
 
 const PHOTO_PROMPTS = [
@@ -74,6 +78,10 @@ const STEP_PROGRESS: Record<Step, number> = {
   camera: 50,
   review: 50,
   summary: 100,
+  phone: 100,
+  verify: 100,
+  finish: 100,
+  submitted: 100,
   complete: 100,
 };
 
@@ -88,6 +96,10 @@ const SmartScan = () => {
   );
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [retakingFromSummary, setRetakingFromSummary] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const [code, setCode] = useState("");
+  const [finishForm, setFinishForm] = useState({ firstName: "", lastName: "", email: "" });
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
@@ -610,10 +622,192 @@ const SmartScan = () => {
               </div>
               <div className="pt-2">
                 <Button
-                  onClick={() => setStep("complete")}
+                  onClick={() => setStep("phone")}
                   className="w-full rounded-full h-12 bg-[hsl(245_60%_65%)] hover:bg-[hsl(245_60%_60%)] text-white"
                 >
                   Next
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {step === "phone" && (
+          <div className="bg-card rounded-2xl p-8 shadow-sm space-y-6">
+            <h1 className="text-2xl font-semibold text-primary text-center">
+              Where should we send the results?
+            </h1>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number (XXX)-XXX-XXXX*</Label>
+              <Input
+                id="phone"
+                inputMode="tel"
+                placeholder="(XXX)-XXX-XXXX"
+                value={phone}
+                onChange={(e) => {
+                  // Format as (XXX)-XXX-XXXX while typing
+                  const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  let formatted = digits;
+                  if (digits.length > 6) {
+                    formatted = `(${digits.slice(0, 3)})-${digits.slice(3, 6)}-${digits.slice(6)}`;
+                  } else if (digits.length > 3) {
+                    formatted = `(${digits.slice(0, 3)})-${digits.slice(3)}`;
+                  } else if (digits.length > 0) {
+                    formatted = `(${digits}`;
+                  }
+                  setPhone(formatted);
+                }}
+                onBlur={() => setPhoneTouched(true)}
+                className="h-12"
+              />
+              {phoneTouched && phone.replace(/\D/g, "").length !== 10 && (
+                <p className="text-sm text-destructive">
+                  Please enter a valid phone number.
+                </p>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              You will be notified via text when your results are ready, standard
+              data rates may apply
+            </p>
+            <div className="flex justify-center pt-2">
+              <Button
+                onClick={() => {
+                  if (phone.replace(/\D/g, "").length !== 10) {
+                    setPhoneTouched(true);
+                    return;
+                  }
+                  setStep("verify");
+                }}
+                className="w-full rounded-full h-12 bg-[hsl(245_60%_65%)] hover:bg-[hsl(245_60%_60%)] text-white"
+              >
+                Verify Phone Number
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === "verify" && (
+          <div className="bg-card rounded-2xl p-8 shadow-sm space-y-6">
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold">Enter verification code</h1>
+              <p className="text-sm text-foreground">
+                Enter the code we sent to {phone || "your phone"}
+              </p>
+            </div>
+            <div className="space-y-3">
+              <Input
+                inputMode="numeric"
+                placeholder="Enter code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="h-12 text-center"
+              />
+              <p className="text-sm text-center">
+                Didn't receive a code?{" "}
+                <button
+                  type="button"
+                  onClick={() => setCode("")}
+                  className="text-secondary hover:underline"
+                >
+                  Resend
+                </button>
+              </p>
+            </div>
+            <div className="flex justify-center pt-2">
+              <Button
+                disabled={!code.trim()}
+                onClick={() => setStep("finish")}
+                className="w-full rounded-full h-12 bg-[hsl(245_60%_65%)] hover:bg-[hsl(245_60%_60%)] text-white disabled:opacity-50"
+              >
+                Submit
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === "finish" && (
+          <div className="bg-card rounded-2xl p-8 shadow-sm space-y-5">
+            <h1 className="text-2xl font-bold text-center">Finish account setup</h1>
+            <div className="space-y-2">
+              <Label htmlFor="finishFirstName">First Name*</Label>
+              <Input
+                id="finishFirstName"
+                placeholder="First Name"
+                value={finishForm.firstName}
+                onChange={(e) =>
+                  setFinishForm({ ...finishForm, firstName: e.target.value })
+                }
+                className="h-12"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="finishLastName">Last Name*</Label>
+              <Input
+                id="finishLastName"
+                placeholder="Last Name"
+                value={finishForm.lastName}
+                onChange={(e) =>
+                  setFinishForm({ ...finishForm, lastName: e.target.value })
+                }
+                className="h-12"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="finishEmail">Email*</Label>
+              <Input
+                id="finishEmail"
+                type="email"
+                placeholder="Email"
+                value={finishForm.email}
+                onChange={(e) =>
+                  setFinishForm({ ...finishForm, email: e.target.value })
+                }
+                className="h-12"
+              />
+            </div>
+            <div className="flex justify-center pt-2">
+              <Button
+                disabled={
+                  !finishForm.firstName.trim() ||
+                  !finishForm.lastName.trim() ||
+                  !finishForm.email.trim()
+                }
+                onClick={() => setStep("submitted")}
+                className="w-full rounded-full h-12 bg-[hsl(245_60%_65%)] hover:bg-[hsl(245_60%_60%)] text-white disabled:opacity-50"
+              >
+                Finish
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === "submitted" && (
+          <>
+            <h1 className="text-3xl font-semibold mb-6">Smart Scan</h1>
+            <div className="bg-card rounded-2xl p-8 shadow-sm text-center space-y-6">
+              <div className="flex justify-center">
+                <div className="w-28 h-28 rounded-2xl bg-secondary/90 flex items-center justify-center">
+                  <ScanFace className="h-16 w-16 text-secondary-foreground" />
+                </div>
+              </div>
+              <h2 className="text-2xl font-semibold text-secondary">
+                Smart Scan Submitted!
+              </h2>
+              <p className="text-foreground">
+                Track the status of your Smart Scan on your dashboard.
+              </p>
+              <p className="text-foreground">
+                You'll be notified when your Smart Scan is complete. To access
+                your Wellness Score, simply click Patient Info and select
+                Wellness Score.
+              </p>
+              <div className="flex justify-center pt-2">
+                <Button
+                  onClick={() => navigate("/")}
+                  className="w-full rounded-full h-12 bg-[hsl(245_60%_65%)] hover:bg-[hsl(245_60%_60%)] text-white"
+                >
+                  Go To Your Dashboard
                 </Button>
               </div>
             </div>
