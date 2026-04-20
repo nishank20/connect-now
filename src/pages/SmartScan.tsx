@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Lock, ScanFace, ChevronRight } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import logo from "@/assets/logo-dental.png";
+import selfieImg from "@/assets/smartscan-selfie.jpg";
 
 type Step = "account" | "intro" | "disclaimer" | "method" | "instructions" | "complete";
 
