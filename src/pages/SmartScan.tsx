@@ -19,6 +19,7 @@ type Step =
   | "method"
   | "instructions"
   | "capture"
+  | "camera"
   | "review"
   | "complete";
 
