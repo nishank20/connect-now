@@ -562,7 +562,6 @@ const SmartScan = () => {
                 src={currentPhoto.image}
                 alt="Reference"
                 className="w-full h-full object-cover"
-                style={{ objectPosition: "center 25%" }}
               />
               <Maximize2 className="absolute bottom-1 right-1 h-4 w-4 text-white drop-shadow" />
             </div>
