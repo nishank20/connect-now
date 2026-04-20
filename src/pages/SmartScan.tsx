@@ -23,6 +23,7 @@ type Step =
   | "capture"
   | "camera"
   | "review"
+  | "summary"
   | "complete";
 
 const PHOTO_PROMPTS = [
@@ -72,6 +73,7 @@ const STEP_PROGRESS: Record<Step, number> = {
   capture: 50,
   camera: 50,
   review: 50,
+  summary: 100,
   complete: 100,
 };
 
@@ -173,8 +175,13 @@ const SmartScan = () => {
       setPhotoIndex(photoIndex + 1);
       setStep("capture");
     } else {
-      setStep("complete");
+      setStep("summary");
     }
+  };
+
+  const handleRetakeFromSummary = (index: number) => {
+    setPhotoIndex(index);
+    setStep("camera");
   };
 
   return (
@@ -562,6 +569,48 @@ const SmartScan = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {step === "summary" && (
+          <>
+            <h1 className="text-3xl font-semibold mb-6">Smart Scan</h1>
+            <div className="bg-card rounded-3xl shadow-sm p-4 sm:p-6 space-y-4">
+              <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+                {PHOTO_PROMPTS.map((prompt, idx) => (
+                  <div
+                    key={prompt.title}
+                    className={`${prompt.bg} relative rounded-2xl overflow-hidden aspect-[4/3]`}
+                  >
+                    {capturedPhotos[idx] && (
+                      <img
+                        src={capturedPhotos[idx]!}
+                        alt={`${prompt.title} captured`}
+                        className="absolute inset-0 w-full h-full object-cover -scale-x-100"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-black/10" />
+                    <span className="absolute top-3 left-3 bg-secondary text-secondary-foreground text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-md shadow">
+                      {prompt.title}
+                    </span>
+                    <button
+                      onClick={() => handleRetakeFromSummary(idx)}
+                      className="absolute bottom-3 right-3 bg-transparent border border-white text-white text-xs font-semibold uppercase tracking-wide px-4 py-2 rounded-md hover:bg-white/20 transition-colors"
+                    >
+                      Retake
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="pt-2">
+                <Button
+                  onClick={() => setStep("complete")}
+                  className="w-full rounded-full h-12 bg-[hsl(245_60%_65%)] hover:bg-[hsl(245_60%_60%)] text-white"
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </>
         )}
 
         {step === "complete" && (
