@@ -67,7 +67,7 @@ const Consultation = () => {
     e.preventDefault();
     if (!termsAgreed) return toast.error("Please agree to Terms and Conditions.");
     toast.success("Account created!");
-    navigate("/");
+    navigate("/appointment");
   };
 
   const progressPct = (step / totalSteps) * 100;
