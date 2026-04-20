@@ -437,6 +437,34 @@ const SmartScan = () => {
 
         {step === "capture" && (
           <div className="bg-card rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-muted">
+              <img
+                src={currentPhoto.image}
+                alt={currentPhoto.title}
+                loading="lazy"
+                className="w-full h-auto object-cover max-h-[60vh]"
+              />
+            </div>
+            <div className="bg-secondary text-secondary-foreground p-6 space-y-4">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="text-2xl font-bold">{currentPhoto.title}</h2>
+                <button
+                  onClick={() => setStep("camera")}
+                  className="shrink-0 w-12 h-12 rounded-full bg-accent-foreground/80 hover:bg-accent-foreground text-secondary-foreground flex items-center justify-center transition-colors"
+                  aria-label="Continue to camera"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </div>
+              <p className="text-base leading-relaxed">
+                {currentPhoto.description}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {step === "camera" && (
+          <div className="bg-card rounded-2xl shadow-sm overflow-hidden">
             <div className="bg-black relative aspect-[3/4] max-h-[60vh] mx-auto w-full">
               <video
                 ref={videoRef}
@@ -480,8 +508,8 @@ const SmartScan = () => {
                   <Camera className="h-6 w-6" />
                 </button>
               </div>
-              <p className="text-base leading-relaxed">
-                {currentPhoto.description}
+              <p className="text-sm leading-relaxed opacity-90">
+                Position yourself to match the reference photo, then tap the camera button to capture.
               </p>
             </div>
           </div>
