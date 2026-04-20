@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, ScanFace, ChevronRight, Maximize2 } from "lucide-react";
+import { Lock, ScanFace, ChevronRight, Maximize2, Camera, AlertCircle } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import { QRCodeSVG } from "qrcode.react";
 import logo from "@/assets/logo-dental.png";
 import selfieImg from "@/assets/smartscan-selfie.jpg";
@@ -76,6 +77,12 @@ const SmartScan = () => {
   const [method, setMethod] = useState<"myself" | "assisted">("myself");
   const [account, setAccount] = useState({ firstName: "", lastName: "", dob: "" });
   const [photoIndex, setPhotoIndex] = useState(0);
+  const [capturedPhotos, setCapturedPhotos] = useState<(string | null)[]>(
+    Array(PHOTO_PROMPTS.length).fill(null)
+  );
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const accountValid =
     account.firstName.trim() && account.lastName.trim() && account.dob.trim();
@@ -85,6 +92,77 @@ const SmartScan = () => {
     step === "capture" || step === "review"
       ? 40 + ((photoIndex + (step === "review" ? 1 : 0)) / PHOTO_PROMPTS.length) * 60
       : STEP_PROGRESS[step];
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const startCamera = async () => {
+    setCameraError(null);
+    stopCamera();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false,
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play().catch(() => {});
+      }
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.name === "NotAllowedError"
+            ? "Camera access was denied. Please allow camera permission in your browser settings."
+            : err.name === "NotFoundError"
+            ? "No camera was found on this device."
+            : err.message
+          : "Unable to access camera.";
+      setCameraError(message);
+    }
+  };
+
+  useEffect(() => {
+    if (step === "capture") {
+      startCamera();
+    } else {
+      stopCamera();
+    }
+    return () => stopCamera();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, photoIndex]);
+
+  const handleCapturePhoto = () => {
+    const video = videoRef.current;
+    if (!video || !streamRef.current) {
+      toast({
+        title: "Camera not ready",
+        description: cameraError ?? "Please allow camera access to take a photo.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth || 1280;
+    canvas.height = video.videoHeight || 720;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+    setCapturedPhotos((prev) => {
+      const next = [...prev];
+      next[photoIndex] = dataUrl;
+      return next;
+    });
+    setStep("review");
+  };
 
   const handleConfirmPhoto = () => {
     if (photoIndex < PHOTO_PROMPTS.length - 1) {
@@ -357,23 +435,47 @@ const SmartScan = () => {
 
         {step === "capture" && (
           <div className="bg-card rounded-2xl shadow-sm overflow-hidden">
-            <div className="bg-muted">
-              <img
-                src={currentPhoto.image}
-                alt={currentPhoto.title}
-                loading="lazy"
-                className="w-full h-auto object-cover max-h-[60vh]"
+            <div className="bg-black relative aspect-[3/4] max-h-[60vh] mx-auto w-full">
+              <video
+                ref={videoRef}
+                playsInline
+                muted
+                autoPlay
+                className="w-full h-full object-cover -scale-x-100"
               />
+              {/* Reference thumbnail overlay */}
+              <div className="absolute top-3 right-3 w-24 h-24 rounded-lg overflow-hidden border-2 border-white/60 shadow-lg bg-card">
+                <img
+                  src={currentPhoto.image}
+                  alt="Reference"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {cameraError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 p-6">
+                  <div className="bg-card text-foreground rounded-xl p-5 max-w-sm text-center space-y-3">
+                    <AlertCircle className="h-8 w-8 mx-auto text-destructive" />
+                    <p className="text-sm">{cameraError}</p>
+                    <Button
+                      onClick={startCamera}
+                      className="rounded-full bg-primary hover:bg-primary/90"
+                    >
+                      Try again
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="bg-secondary text-secondary-foreground p-6 space-y-4">
               <div className="flex items-start justify-between gap-4">
                 <h2 className="text-2xl font-bold">{currentPhoto.title}</h2>
                 <button
-                  onClick={() => setStep("review")}
-                  className="shrink-0 w-12 h-12 rounded-full bg-accent-foreground/80 hover:bg-accent-foreground text-secondary-foreground flex items-center justify-center transition-colors"
+                  onClick={handleCapturePhoto}
+                  disabled={!!cameraError}
+                  className="shrink-0 w-14 h-14 rounded-full bg-accent-foreground/80 hover:bg-accent-foreground text-secondary-foreground flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Take photo"
                 >
-                  <ChevronRight className="h-6 w-6" />
+                  <Camera className="h-6 w-6" />
                 </button>
               </div>
               <p className="text-base leading-relaxed">
@@ -387,7 +489,17 @@ const SmartScan = () => {
           <div
             className={`${currentPhoto.bg} rounded-2xl shadow-sm overflow-hidden min-h-[70vh] flex flex-col p-6 relative`}
           >
-            <div className="absolute top-4 right-4 w-28 h-28 rounded-lg overflow-hidden border-2 border-white/40 shadow-lg">
+            {/* Captured photo as background */}
+            {capturedPhotos[photoIndex] && (
+              <img
+                src={capturedPhotos[photoIndex]!}
+                alt="Your captured photo"
+                className="absolute inset-0 w-full h-full object-cover -scale-x-100"
+              />
+            )}
+            <div className="absolute inset-0 bg-black/30" />
+
+            <div className="absolute top-4 right-4 w-28 h-28 rounded-lg overflow-hidden border-2 border-white/40 shadow-lg z-10">
               <img
                 src={currentPhoto.image}
                 alt="Reference"
@@ -398,8 +510,8 @@ const SmartScan = () => {
 
             <div className="flex-1" />
 
-            <div className="space-y-6 text-center">
-              <h2 className="text-2xl font-semibold text-white">
+            <div className="relative z-10 space-y-6 text-center">
+              <h2 className="text-2xl font-semibold text-white drop-shadow">
                 Does your photo match the example?
               </h2>
               <div className="flex justify-center gap-3">
