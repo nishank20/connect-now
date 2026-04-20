@@ -73,6 +73,7 @@ const STEP_PROGRESS: Record<Step, number> = {
   capture: 50,
   camera: 50,
   review: 50,
+  summary: 100,
   complete: 100,
 };
 
