@@ -141,6 +141,92 @@ const Appointment = () => {
                 <Label htmlFor="updateIns" className="font-normal">Click here to add or update your insurance.</Label>
               </div>
 
+              <div className="rounded-xl border border-border bg-muted/30 p-5 space-y-5">
+                <p className="font-medium text-foreground">Intake Form - Dental.com</p>
+                <p className="text-sm text-muted-foreground">Please fill out the questions below and select "Submit" to continue.</p>
+
+                <div className="space-y-2">
+                  <Label htmlFor="reason">What is the reason for your visit today? *</Label>
+                  <Textarea id="reason" maxLength={150} className="bg-accent/40" />
+                  <p className="text-xs text-muted-foreground text-right">150 characters remaining.</p>
+                </div>
+
+                <p className="text-sm">
+                  Please seek emergency medical services if you are experiencing a medical emergency (ie. chest pain, head or eye injury, broken bones, difficulty breathing etc).
+                </p>
+
+                <div className="rounded-md border border-border bg-card p-4 space-y-3">
+                  <p className="text-sm font-medium">Please select your pain level below:</p>
+                  <div className="space-y-2">
+                    <Label>Pain Level:</Label>
+                    <Select>
+                      <SelectTrigger><SelectValue placeholder="Select pain level" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">No Pain</SelectItem>
+                        <SelectItem value="some">Some Pain</SelectItem>
+                        <SelectItem value="moderate">Moderate Pain</SelectItem>
+                        <SelectItem value="severe">Severe Pain</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label>Are you experiencing any of the following? (Check off all that apply) *</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {SYMPTOMS.map((s) => (
+                      <div key={s} className="flex items-center gap-2">
+                        <Checkbox id={`sym-${s}`} />
+                        <Label htmlFor={`sym-${s}`} className="font-normal text-sm">{s}</Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {[
+                  { id: "allergies", label: "Do you have any allergies? *" },
+                  { id: "conditions", label: "Do you have any medical conditions? *" },
+                  { id: "meds", label: "Are you currently taking any medications? *" },
+                ].map((q) => (
+                  <div key={q.id} className="flex items-center justify-between gap-4">
+                    <Label className="font-normal">{q.label}</Label>
+                    <RadioGroup defaultValue="no" className="flex gap-4">
+                      <div className="flex items-center gap-1">
+                        <RadioGroupItem value="yes" id={`${q.id}-y`} />
+                        <Label htmlFor={`${q.id}-y`} className="font-normal">Yes</Label>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <RadioGroupItem value="no" id={`${q.id}-n`} />
+                        <Label htmlFor={`${q.id}-n`} className="font-normal">No</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                ))}
+
+                <div className="space-y-2">
+                  <Label htmlFor="lastExam">When was your last dental exam?</Label>
+                  <Input id="lastExam" type="date" />
+                </div>
+
+                <div className="flex items-start gap-2">
+                  <Checkbox id="privacy" className="mt-1" />
+                  <Label htmlFor="privacy" className="font-normal">
+                    I agree that I have read and consent to the{" "}
+                    <a href="#" className="text-secondary underline">Privacy Practices</a>
+                    <span className="text-destructive"> *</span>
+                  </Label>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Signature</Label>
+                  <div className="rounded-md bg-muted/60 border border-border h-32 flex items-center justify-center relative">
+                    <RotateCcw className="absolute top-2 left-2 h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground text-sm">Sign here</span>
+                  </div>
+                  <p className="text-center text-xs text-muted-foreground">Patient / Responsible Party Signature</p>
+                </div>
+              </div>
+
               <div className="flex items-start gap-2 rounded-md bg-accent/50 p-3">
                 <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 shrink-0" />
                 <p className="text-sm">If this is a medical emergency, please dial 911 or go to your nearest medical facility immediately.</p>
