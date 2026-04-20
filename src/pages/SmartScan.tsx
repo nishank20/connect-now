@@ -24,6 +24,10 @@ type Step =
   | "camera"
   | "review"
   | "summary"
+  | "phone"
+  | "verify"
+  | "finish"
+  | "submitted"
   | "complete";
 
 const PHOTO_PROMPTS = [
