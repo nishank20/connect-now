@@ -29,7 +29,15 @@ const PatientIntake = () => {
         </button>
       </header>
 
-      <main className="container max-w-2xl pb-16">
+      <main className="container max-w-3xl pb-16">
+        {/* Progress bar pill */}
+        <div className="mx-auto mb-4 h-3 w-full rounded-full bg-card shadow-sm overflow-hidden">
+          <div
+            className="h-full bg-[image:var(--gradient-brand)] transition-all duration-500"
+            style={{ width: `25%` }}
+          />
+        </div>
+
         <div className="rounded-2xl bg-card p-10 shadow-sm">
           <h1 className="text-center text-2xl font-semibold text-primary">
             Creating an account is quick and easy
