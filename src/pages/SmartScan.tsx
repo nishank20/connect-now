@@ -489,7 +489,17 @@ const SmartScan = () => {
           <div
             className={`${currentPhoto.bg} rounded-2xl shadow-sm overflow-hidden min-h-[70vh] flex flex-col p-6 relative`}
           >
-            <div className="absolute top-4 right-4 w-28 h-28 rounded-lg overflow-hidden border-2 border-white/40 shadow-lg">
+            {/* Captured photo as background */}
+            {capturedPhotos[photoIndex] && (
+              <img
+                src={capturedPhotos[photoIndex]!}
+                alt="Your captured photo"
+                className="absolute inset-0 w-full h-full object-cover -scale-x-100"
+              />
+            )}
+            <div className="absolute inset-0 bg-black/30" />
+
+            <div className="absolute top-4 right-4 w-28 h-28 rounded-lg overflow-hidden border-2 border-white/40 shadow-lg z-10">
               <img
                 src={currentPhoto.image}
                 alt="Reference"
@@ -500,8 +510,8 @@ const SmartScan = () => {
 
             <div className="flex-1" />
 
-            <div className="space-y-6 text-center">
-              <h2 className="text-2xl font-semibold text-white">
+            <div className="relative z-10 space-y-6 text-center">
+              <h2 className="text-2xl font-semibold text-white drop-shadow">
                 Does your photo match the example?
               </h2>
               <div className="flex justify-center gap-3">
