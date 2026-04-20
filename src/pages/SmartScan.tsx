@@ -546,7 +546,7 @@ const SmartScan = () => {
               </h2>
               <div className="flex justify-center gap-3">
                 <Button
-                  onClick={() => setStep("capture")}
+                  onClick={() => setStep("camera")}
                   className="rounded-full px-10 h-12 bg-card text-foreground hover:bg-card/90"
                 >
                   Retake
