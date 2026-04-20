@@ -1,28 +1,103 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Lock, ScanFace, ChevronRight } from "lucide-react";
 import logo from "@/assets/logo-dental.png";
 
-type Step = "intro" | "disclaimer" | "method" | "instructions" | "complete";
+type Step = "account" | "intro" | "disclaimer" | "method" | "instructions" | "complete";
+
+const STEP_PROGRESS: Record<Step, number> = {
+  account: 20,
+  intro: 35,
+  disclaimer: 55,
+  method: 75,
+  instructions: 90,
+  complete: 100,
+};
 
 const SmartScan = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<Step>("intro");
+  const [step, setStep] = useState<Step>("account");
   const [method, setMethod] = useState<"myself" | "assisted">("myself");
+  const [account, setAccount] = useState({ firstName: "", lastName: "", dob: "" });
 
-  const Header = () => (
-    <header className="container py-6">
-      <button onClick={() => navigate("/")} className="inline-block">
-        <img src={logo} alt="dental.com" className="h-10 w-auto" />
-      </button>
-    </header>
-  );
+  const accountValid =
+    account.firstName.trim() && account.lastName.trim() && account.dob.trim();
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <Header />
+      <header className="container py-6">
+        <button onClick={() => navigate("/")} className="inline-block">
+          <img src={logo} alt="dental.com" className="h-10 w-auto" />
+        </button>
+      </header>
       <main className="container max-w-xl pb-16">
+        <div className="h-1 w-full bg-muted rounded-full mb-8 overflow-hidden">
+          <div
+            className="h-full bg-[image:var(--gradient-brand)] transition-all"
+            style={{ width: `${STEP_PROGRESS[step]}%` }}
+          />
+        </div>
+
+        {step === "account" && (
+          <div className="bg-card rounded-2xl p-8 shadow-sm space-y-6">
+            <div className="text-center space-y-2">
+              <h1 className="text-2xl font-semibold text-primary">
+                Creating an account is quick and easy
+              </h1>
+              <p className="text-sm">
+                Already have an account?{" "}
+                <a href="#" className="text-secondary hover:underline">Sign In</a>
+              </p>
+            </div>
+            <p className="text-center text-sm text-muted-foreground">
+              Subscribers and adult dependents 18 and older should create their own
+              accounts. You will provide subscriber insurance info on the next page.
+              Subscribers can add dependents under 18 as patients after creating an
+              account.
+            </p>
+            <p className="text-sm text-primary font-medium">* All fields are required</p>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name*</Label>
+                <Input
+                  id="firstName"
+                  value={account.firstName}
+                  onChange={(e) => setAccount({ ...account, firstName: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name*</Label>
+                <Input
+                  id="lastName"
+                  value={account.lastName}
+                  onChange={(e) => setAccount({ ...account, lastName: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="dob">Date of Birth*</Label>
+                <Input
+                  id="dob"
+                  type="date"
+                  value={account.dob}
+                  onChange={(e) => setAccount({ ...account, dob: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="flex justify-center pt-2">
+              <Button
+                disabled={!accountValid}
+                onClick={() => setStep("intro")}
+                className="rounded-full px-12 h-12 bg-primary hover:bg-primary/90"
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
+
         {step === "intro" && (
           <>
             <h1 className="text-3xl font-semibold mb-6">Smart Scan</h1>
