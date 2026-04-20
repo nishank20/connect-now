@@ -132,7 +132,7 @@ const SmartScan = () => {
   };
 
   useEffect(() => {
-    if (step === "capture") {
+    if (step === "camera") {
       startCamera();
     } else {
       stopCamera();
