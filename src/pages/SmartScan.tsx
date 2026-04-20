@@ -342,10 +342,78 @@ const SmartScan = () => {
               </p>
               <div className="flex justify-center">
                 <Button
-                  onClick={() => setStep("complete")}
+                  onClick={() => {
+                    setPhotoIndex(0);
+                    setStep("capture");
+                  }}
                   className="rounded-full px-12 h-12 bg-primary hover:bg-primary/90 w-full max-w-sm"
                 >
                   Next
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {step === "capture" && (
+          <div className="bg-card rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-muted">
+              <img
+                src={currentPhoto.image}
+                alt={currentPhoto.title}
+                loading="lazy"
+                className="w-full h-auto object-cover max-h-[60vh]"
+              />
+            </div>
+            <div className="bg-secondary text-secondary-foreground p-6 space-y-4">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="text-2xl font-bold">{currentPhoto.title}</h2>
+                <button
+                  onClick={() => setStep("review")}
+                  className="shrink-0 w-12 h-12 rounded-full bg-yellow-700 hover:bg-yellow-800 text-secondary-foreground flex items-center justify-center transition-colors"
+                  aria-label="Take photo"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </div>
+              <p className="text-base leading-relaxed">
+                {currentPhoto.description}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {step === "review" && (
+          <div
+            className={`${currentPhoto.bg} rounded-2xl shadow-sm overflow-hidden min-h-[70vh] flex flex-col p-6 relative`}
+          >
+            <div className="absolute top-4 right-4 w-28 h-28 rounded-lg overflow-hidden border-2 border-white/40 shadow-lg">
+              <img
+                src={currentPhoto.image}
+                alt="Reference"
+                className="w-full h-full object-cover"
+              />
+              <Maximize2 className="absolute bottom-1 right-1 h-4 w-4 text-white drop-shadow" />
+            </div>
+
+            <div className="flex-1" />
+
+            <div className="space-y-6 text-center">
+              <h2 className="text-2xl font-semibold text-white">
+                Does your photo match the example?
+              </h2>
+              <div className="flex justify-center gap-3">
+                <Button
+                  onClick={() => setStep("capture")}
+                  className="rounded-full px-10 h-12 bg-card text-foreground hover:bg-card/90"
+                >
+                  Retake
+                </Button>
+                <Button
+                  onClick={handleConfirmPhoto}
+                  className="rounded-full px-10 h-12 bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                >
+                  Confirm
                 </Button>
               </div>
             </div>
