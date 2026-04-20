@@ -338,39 +338,28 @@ const Appointment = () => {
             <div className="space-y-6">
               <h1 className="text-2xl font-semibold text-foreground">Review and Submit</h1>
 
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {callType === "video" ? "Video Call" : "Phone Call"} Request for
+              <div className="pl-6">
+                <p className="text-sm">Visit is for</p>
+                <p className="font-semibold">Test Diya</p>
+              </div>
+
+              <div className="pl-6 space-y-4 text-primary">
+                <p>Once you click "Start Visit", you will be taken into a virtual waiting room.</p>
+                <p className="flex items-start gap-2">
+                  <Video className="h-5 w-5 mt-0.5 text-primary shrink-0" />
+                  <span>Make sure to test your video and audio capabilities prior to starting your visit.</span>
                 </p>
-                <p className="font-semibold">Test Test</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="callPhone">Phone Number (We'll call this number)</Label>
-                <Input
-                  id="callPhone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="(XXX)-XXX-XXXX"
-                />
-                {!phone && <p className="text-sm text-destructive">Please enter a valid phone number.</p>}
-              </div>
-
-              <div className="space-y-3 text-primary">
-                <p>Once you click "Confirm Call Request" you'll be taken to the credit card capture screen and your call back will be confirmed.</p>
-                <p>We will call you as soon as we have a provider available to join your call.</p>
               </div>
 
               <p className="text-center italic text-sm">Your payment method will not be charged until your visit is complete.</p>
 
               <div className="flex justify-center gap-4 pt-4">
-                <Button
-                  onClick={() => phone ? next() : toast.error("Enter a valid phone number.")}
-                  disabled={!phone}
-                  size="lg"
-                  className="rounded-full px-10 h-12 bg-primary hover:bg-primary/90"
-                >Confirm Call Request</Button>
                 <Button variant="outline" onClick={back} size="lg" className="rounded-full px-12 h-12">Cancel</Button>
+                <Button
+                  onClick={next}
+                  size="lg"
+                  className="rounded-full px-12 h-12 bg-primary hover:bg-primary/90"
+                >Start Visit</Button>
               </div>
             </div>
           )}
