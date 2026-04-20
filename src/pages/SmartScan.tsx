@@ -370,7 +370,7 @@ const SmartScan = () => {
                 <h2 className="text-2xl font-bold">{currentPhoto.title}</h2>
                 <button
                   onClick={() => setStep("review")}
-                  className="shrink-0 w-12 h-12 rounded-full bg-yellow-700 hover:bg-yellow-800 text-secondary-foreground flex items-center justify-center transition-colors"
+                  className="shrink-0 w-12 h-12 rounded-full bg-accent-foreground/80 hover:bg-accent-foreground text-secondary-foreground flex items-center justify-center transition-colors"
                   aria-label="Take photo"
                 >
                   <ChevronRight className="h-6 w-6" />
