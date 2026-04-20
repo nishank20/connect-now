@@ -435,23 +435,47 @@ const SmartScan = () => {
 
         {step === "capture" && (
           <div className="bg-card rounded-2xl shadow-sm overflow-hidden">
-            <div className="bg-muted">
-              <img
-                src={currentPhoto.image}
-                alt={currentPhoto.title}
-                loading="lazy"
-                className="w-full h-auto object-cover max-h-[60vh]"
+            <div className="bg-black relative aspect-[3/4] max-h-[60vh] mx-auto w-full">
+              <video
+                ref={videoRef}
+                playsInline
+                muted
+                autoPlay
+                className="w-full h-full object-cover -scale-x-100"
               />
+              {/* Reference thumbnail overlay */}
+              <div className="absolute top-3 right-3 w-24 h-24 rounded-lg overflow-hidden border-2 border-white/60 shadow-lg bg-card">
+                <img
+                  src={currentPhoto.image}
+                  alt="Reference"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {cameraError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 p-6">
+                  <div className="bg-card text-foreground rounded-xl p-5 max-w-sm text-center space-y-3">
+                    <AlertCircle className="h-8 w-8 mx-auto text-destructive" />
+                    <p className="text-sm">{cameraError}</p>
+                    <Button
+                      onClick={startCamera}
+                      className="rounded-full bg-primary hover:bg-primary/90"
+                    >
+                      Try again
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="bg-secondary text-secondary-foreground p-6 space-y-4">
               <div className="flex items-start justify-between gap-4">
                 <h2 className="text-2xl font-bold">{currentPhoto.title}</h2>
                 <button
-                  onClick={() => setStep("review")}
-                  className="shrink-0 w-12 h-12 rounded-full bg-accent-foreground/80 hover:bg-accent-foreground text-secondary-foreground flex items-center justify-center transition-colors"
+                  onClick={handleCapturePhoto}
+                  disabled={!!cameraError}
+                  className="shrink-0 w-14 h-14 rounded-full bg-accent-foreground/80 hover:bg-accent-foreground text-secondary-foreground flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Take photo"
                 >
-                  <ChevronRight className="h-6 w-6" />
+                  <Camera className="h-6 w-6" />
                 </button>
               </div>
               <p className="text-base leading-relaxed">
