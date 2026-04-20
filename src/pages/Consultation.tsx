@@ -52,7 +52,7 @@ const Consultation = () => {
         </a>
       </header>
 
-      <main className="container max-w-2xl py-8">
+      <main className="container max-w-3xl py-10">
         <button
           onClick={() => navigate("/")}
           className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
