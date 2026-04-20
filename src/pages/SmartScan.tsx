@@ -11,6 +11,8 @@ import selfieImg from "@/assets/smartscan-selfie.jpg";
 import scanRightSide from "@/assets/scan-right-side.jpg";
 import scanLeftSide from "@/assets/scan-left-side.jpg";
 import scanFront from "@/assets/scan-front.jpg";
+import scanUpper from "@/assets/scan-upper.jpg";
+import scanLower from "@/assets/scan-lower.jpg";
 
 type Step =
   | "account"
@@ -46,17 +48,17 @@ const PHOTO_PROMPTS = [
     bg: "bg-[hsl(15_85%_55%)]",
   },
   {
-    title: "Upper",
+    title: "Lower",
     description:
-      "Tilt your head back slightly and open wide. Use your fingers to lift your upper lip so we can see all of your top teeth and gums.",
-    image: scanFront,
+      "Open your mouth as wide as you can to get a clear shot of all your bottom teeth.",
+    image: scanLower,
     bg: "bg-[hsl(15_85%_55%)]",
   },
   {
-    title: "Lower",
+    title: "Upper",
     description:
-      "Open your mouth wide and pull your lower lip down with your fingers to show all of your bottom teeth and gums.",
-    image: scanFront,
+      "Turn your phone upside down for a better angle, open your mouth as wide as you can to get a clear shot of all your upper teeth.",
+    image: scanUpper,
     bg: "bg-[hsl(15_85%_55%)]",
   },
 ];
