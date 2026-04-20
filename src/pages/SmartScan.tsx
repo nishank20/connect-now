@@ -23,6 +23,7 @@ type Step =
   | "capture"
   | "camera"
   | "review"
+  | "summary"
   | "complete";
 
 const PHOTO_PROMPTS = [
