@@ -93,18 +93,8 @@ const Consultation = () => {
           {step === 1 && (
             <>
               <h1 className="text-center text-2xl font-semibold text-primary">
-                Creating an account is quick and easy
+                Account Details
               </h1>
-              <p className="mt-1 text-center text-sm text-foreground">
-                Already have an account?{" "}
-                <a href="#" className="text-secondary font-medium hover:underline">Sign In</a>
-              </p>
-
-              <p className="mt-5 text-center text-sm text-foreground max-w-xl mx-auto">
-                Subscribers and adult dependents 18 and older should create their own accounts.
-                You will provide subscriber insurance info on the next page. Subscribers can add
-                dependents under 18 as patients after creating an account.
-              </p>
 
               <form onSubmit={handleStep1} className="mt-8 space-y-6">
                 <p className="text-sm font-semibold text-primary">* All fields are required</p>

@@ -32,10 +32,16 @@ const PatientIntake = () => {
       <main className="container max-w-2xl pb-16">
         <div className="rounded-2xl bg-card p-10 shadow-sm">
           <h1 className="text-center text-2xl font-semibold text-primary">
-            Virtual Consultation
+            Creating an account is quick and easy
           </h1>
-          <p className="mt-2 text-center text-sm text-foreground">
-            Let's start with some basic information about the patient.
+          <p className="mt-1 text-center text-sm text-foreground">
+            Already have an account?{" "}
+            <a href="#" className="text-secondary font-medium hover:underline">Sign In</a>
+          </p>
+          <p className="mt-5 text-center text-sm text-foreground max-w-xl mx-auto">
+            Subscribers and adult dependents 18 and older should create their own accounts.
+            You will provide subscriber insurance info on the next page. Subscribers can add
+            dependents under 18 as patients after creating an account.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-5 max-w-md mx-auto">
