@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo-dental.png";
-import { Video, ShieldCheck, Clock } from "lucide-react";
+import { Video, ShieldCheck, Clock, ScanLine } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
