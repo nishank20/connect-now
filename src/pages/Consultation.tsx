@@ -147,19 +147,6 @@ const Consultation = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-2">
-                  <Label className="text-sm">Do you have insurance?*</Label>
-                  <RadioGroup value={hasInsurance} onValueChange={setHasInsurance} className="flex gap-6">
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem value="yes" id="ins-yes" />
-                      <Label htmlFor="ins-yes" className="font-normal">Yes</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RadioGroupItem value="no" id="ins-no" />
-                      <Label htmlFor="ins-no" className="font-normal">No</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
 
                 <p className="text-sm text-foreground text-center pt-2">
                   Read more about our{" "}
